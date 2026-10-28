@@ -219,7 +219,7 @@ export default function ComingSoon() {
                 <div className="preview-icon">
                   <MapPin size={22} />
                 </div>
-                <h4 className="preview-title">Catálogo Curado estilo Airbnb</h4>
+                <h4 className="preview-title">Catálogo Curado de Locaciones</h4>
                 <p className="preview-text">
                   Filtra por tipo de evento, número de invitados, ambiente y amenidades. Con fotos reales de alta resolución y especificaciones claras.
                 </p>
