@@ -13,7 +13,9 @@ import {
   SlidersHorizontal,
   Mail,
   Send,
-  Compass
+  Compass,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 const FORMS = {
@@ -35,6 +37,7 @@ const FORMS = {
 
 export default function ComingSoon() {
   const [activeModal, setActiveModal] = useState(null); // 'client' | 'provider' | null
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [emailWaitlist, setEmailWaitlist] = useState('');
   const [waitlistDone, setWaitlistDone] = useState(false);
 
@@ -316,25 +319,36 @@ export default function ComingSoon() {
 
       {/* Modal for Google Forms Embed */}
       {activeModal && (
-        <div className="modal-overlay" onClick={() => setActiveModal(null)}>
-          <div className="modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => { setActiveModal(null); setIsFullScreen(false); }}>
+          <div className={`modal-card ${isFullScreen ? 'fullscreen' : ''}`} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-header-title">
-                <img src="/logo-coffee.png" alt="Vinka" style={{ height: '24px', width: 'auto' }} />
+                <img src="/logo-coffee.png" alt="Vinka" style={{ height: '26px', width: 'auto' }} />
                 <div>
                   <h3>{FORMS[activeModal].title}</h3>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
                     {FORMS[activeModal].subtitle}
                   </div>
                 </div>
               </div>
-              <button 
-                className="btn-close-modal" 
-                onClick={() => setActiveModal(null)}
-                aria-label="Cerrar modal"
-              >
-                <X size={18} />
-              </button>
+              <div className="modal-header-actions">
+                <button 
+                  className="btn-icon-action" 
+                  onClick={() => setIsFullScreen(!isFullScreen)}
+                  title={isFullScreen ? "Restaurar tamaño normal" : "Maximizar a pantalla completa"}
+                  aria-label="Alternar pantalla completa"
+                >
+                  {isFullScreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+                </button>
+                <button 
+                  className="btn-close-modal" 
+                  onClick={() => { setActiveModal(null); setIsFullScreen(false); }}
+                  aria-label="Cerrar modal"
+                  title="Cerrar (Esc)"
+                >
+                  <X size={18} />
+                </button>
+              </div>
             </div>
 
             <div className="modal-body">
