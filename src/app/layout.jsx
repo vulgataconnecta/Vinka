@@ -16,10 +16,10 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: 'Vinka — Innovación, Infraestructura & Soluciones Digitales',
-  description: 'Vinka: Plataforma de soluciones tecnológicas, infraestructura en la nube y desarrollo de software escalable para empresas modernas.',
+  title: 'Vinka — Muy Pronto | Espacios Únicos & Momentos Inolvidables',
+  description: 'Vinka está transformando la forma de descubrir, rentar y organizar eventos en locaciones exclusivas. Participa en nuestra preventa y encuestas.',
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236366f1'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>",
+    icon: '/logo-coffee.png',
   },
 };
 
