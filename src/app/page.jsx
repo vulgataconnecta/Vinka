@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { 
   Globe, 
@@ -17,9 +19,8 @@ import {
   Sparkles,
   GitBranch
 } from 'lucide-react';
-import './App.css';
 
-export default function App() {
+export default function Home() {
   const [activeTab, setActiveTab] = useState('vercel');
   const [trafficRequests, setTrafficRequests] = useState(500000);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -473,11 +474,11 @@ export default function App() {
               <span>Conectar Vinka a Vercel</span>
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: '1.25rem', lineHeight: '1.6' }}>
-              El proyecto local ya está inicializado en la rama <strong>main</strong> con Git y Vite listo para producción.
+              El proyecto local ya está configurado con Next.js y listo para producción en la rama <strong>main</strong>.
             </p>
             <ol style={{ paddingLeft: '1.2rem', color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.8', marginBottom: '1.5rem' }}>
               <li>Sube este repositorio a tu GitHub de Vinka.</li>
-              <li>En Vercel Pro, haz clic en <strong>+ Add GitHub Scope</strong> e importa el repo.</li>
+              <li>En Vercel Pro, importa el repositorio <strong>vulgataconnecta/Vinka</strong>.</li>
               <li>Configura tu dominio en <strong>Settings &gt; Domains</strong>.</li>
             </ol>
             <button className="btn-primary" style={{ width: '100%' }} onClick={() => setShowModal(false)}>
@@ -494,7 +495,7 @@ export default function App() {
             <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>Vinka Platform</span> &copy; {new Date().getFullYear()} &bull; Todos los derechos reservados.
           </div>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <span>Infraestructura Vercel Pro</span>
+            <span>Infraestructura Next.js &bull; Vercel Pro</span>
             <span>&bull;</span>
             <span style={{ color: 'var(--accent-emerald)' }}>● Sistema Activo en Local</span>
           </div>
