@@ -138,86 +138,30 @@ button {
   z-index: 1;
 }
 
-/* Header */
-.site-header {
-  padding: 2rem 0;
-  position: relative;
-  z-index: 10;
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  transition: transform var(--transition);
-}
-
-.logo-link:hover {
-  transform: scale(1.02);
-}
-
-.logo-img {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--bg-pill);
-  border: 1px solid var(--border-subtle);
-  padding: 0.4rem 1rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--coffee-rich);
-}
-
-.badge-dot {
-  width: 7px;
-  height: 7px;
-  background-color: var(--accent-caramel);
-  border-radius: 50%;
-  box-shadow: 0 0 6px rgba(163, 107, 66, 0.6);
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 1;
-  }
-}
-
 /* Hero Section */
 .hero-section {
-  padding: 3rem 0 4rem;
+  padding: 5rem 0 3.5rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .hero-emblem-wrapper {
-  margin: 0 auto 1.75rem;
-  display: inline-flex;
+  margin: 0 auto 1.5rem;
+  display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  width: 100%;
 }
 
 .hero-main-logo {
-  max-width: 260px;
+  max-width: 280px;
+  width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
   filter: drop-shadow(0 12px 24px rgba(45, 29, 22, 0.08));
   transition: transform var(--transition);
 }
@@ -229,6 +173,7 @@ button {
 .hero-badge-tag {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background: var(--bg-soft);
   border: 1px solid var(--coffee-foam);
@@ -237,9 +182,9 @@ button {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.45rem 1.25rem;
+  padding: 0.5rem 1.35rem;
   border-radius: var(--radius-full);
-  margin-bottom: 1.5rem;
+  margin: 0 auto 1.75rem auto;
   box-shadow: var(--shadow-sm);
 }
 
@@ -261,20 +206,28 @@ button {
 .hero-subtitle {
   font-size: 1.2rem;
   color: var(--text-muted);
-  max-width: 680px;
+  max-width: 720px;
   margin: 0 auto 2.5rem;
   line-height: 1.7;
 }
 
 /* Action Cards (Clients & Providers) */
 .cards-section {
-  margin: 1.5rem 0 5rem;
+  margin: 1.5rem auto 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap: 2.25rem;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 .action-card {
@@ -289,6 +242,7 @@ button {
   flex-direction: column;
   justify-content: space-between;
   transition: var(--transition);
+  width: 100%;
 }
 
 .action-card:hover {
@@ -420,7 +374,7 @@ button {
 
 /* Feature Preview Strip */
 .features-preview-section {
-  padding: 4rem 0;
+  padding: 4.5rem 0;
   background: var(--bg-soft);
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
@@ -446,6 +400,8 @@ button {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.75rem;
+  max-width: 1040px;
+  margin: 0 auto;
 }
 
 .preview-box {
@@ -518,6 +474,7 @@ button {
   box-shadow: 0 25px 60px rgba(30, 20, 15, 0.35);
   border: 1px solid var(--border-card);
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin: 0 auto;
 }
 
 @keyframes slideUp {
@@ -573,13 +530,18 @@ button {
   overflow-y: auto;
   position: relative;
   background: #FFFFFF;
-  min-height: 480px;
+  min-height: 520px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-iframe {
   width: 100%;
-  height: 600px;
+  height: 620px;
   border: none;
+  display: block;
+  margin: 0 auto;
 }
 
 .modal-footer {
@@ -607,21 +569,26 @@ button {
 
 /* Footer */
 .site-footer {
-  padding: 3.5rem 0 2.5rem;
+  padding: 4rem 0 3rem;
   text-align: center;
   border-top: 1px solid var(--border-subtle);
   background: var(--bg-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-logo {
-  height: 38px;
+  height: 42px;
   width: auto;
-  margin-bottom: 1.25rem;
+  margin: 0 auto 1.25rem;
+  display: block;
   opacity: 0.9;
 }
 
 .footer-text {
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
   max-width: 500px;
   margin: 0 auto 1.5rem;
@@ -651,6 +618,6 @@ button {
     padding: 2rem 1.5rem;
   }
   .hero-main-logo {
-    max-width: 200px;
+    max-width: 220px;
   }
 }

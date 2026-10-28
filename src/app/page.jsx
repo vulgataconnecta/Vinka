@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { 
   Sparkles, 
   MapPin, 
@@ -10,12 +9,10 @@ import {
   ArrowRight, 
   ExternalLink, 
   X, 
-  CalendarCheck, 
   ShieldCheck, 
   SlidersHorizontal,
   Mail,
   Send,
-  Users,
   Compass
 } from 'lucide-react';
 
@@ -63,29 +60,12 @@ export default function ComingSoon() {
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div className="bg-ambient-pattern" />
 
-      {/* Header */}
-      <header className="site-header">
-        <div className="container header-inner">
-          <a href="#" className="logo-link">
-            <img 
-              src="/logo-coffee.png" 
-              alt="Vinka Logo" 
-              className="logo-img"
-            />
-          </a>
-
-          <div className="header-badge">
-            <span className="badge-dot"></span>
-            <span>Próximamente &bull; Acceso Exclusivo</span>
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main style={{ flex: 1 }}>
         {/* Hero Section */}
         <section className="hero-section">
-          <div className="container">
+          <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Centered Logo */}
             <div className="hero-emblem-wrapper">
               <img 
                 src="/logo-coffee.png" 
@@ -94,24 +74,28 @@ export default function ComingSoon() {
               />
             </div>
 
-            <div className="hero-badge-tag">
-              <Sparkles size={14} color="#A36B42" />
-              <span>El nuevo estándar en experiencias &amp; locaciones</span>
+            {/* Centered Badge below image */}
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1.75rem' }}>
+              <div className="hero-badge-tag" style={{ margin: 0 }}>
+                <Sparkles size={14} color="#A36B42" />
+                <span>El nuevo estándar en experiencias &amp; locaciones</span>
+              </div>
             </div>
 
+            {/* Hero Title */}
             <h1 className="hero-title">
-              Descubre espacios únicos y crea momentos <span className="highlight">memorables</span>.
+              Descubre espacios únicos y organiza momentos <span className="highlight">memorables</span>.
             </h1>
 
+            {/* Hero Subtitle */}
             <p className="hero-subtitle">
-              Estamos preparando la plataforma definitiva para explorar y rentar locaciones exclusivas, 
-              coordinar proveedores de primer nivel y disfrutar de reservas sin fricción.
+              Vinka esta preparando la plataforma definitiva para explorar y rentar locaciones, proveedores y servicios de primer nivel y disfrutar de reservas sin fricción.
             </p>
           </div>
         </section>
 
-        {/* Dual Cards Section: Clientes & Proveedores */}
-        <section className="container cards-section">
+        {/* Dual Cards Section: Clientes & Proveedores (Centered) */}
+        <section className="cards-section" style={{ width: '100%', display: 'flex', justifyContent: 'center', padding: '0 1.5rem' }}>
           <div className="cards-grid">
             {/* Card Clientes */}
             <div className="action-card">
@@ -265,8 +249,8 @@ export default function ComingSoon() {
         </section>
 
         {/* Waitlist Subscription Section */}
-        <section className="container" style={{ padding: '5rem 0 3rem', textAlign: 'center' }}>
-          <div style={{ maxWidth: '580px', margin: '0 auto', background: 'var(--bg-surface)', padding: '2.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-card)', boxShadow: 'var(--shadow-md)' }}>
+        <section className="container" style={{ padding: '5rem 0 3rem', display: 'flex', justifyContent: 'center' }}>
+          <div style={{ maxWidth: '580px', width: '100%', background: 'var(--bg-surface)', padding: '2.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-card)', boxShadow: 'var(--shadow-md)', textAlign: 'center' }}>
             <div style={{ width: '48px', height: '48px', margin: '0 auto 1.25rem', background: 'var(--bg-soft)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-caramel)' }}>
               <Mail size={22} />
             </div>
@@ -275,7 +259,7 @@ export default function ComingSoon() {
               Déjanos tu correo para recibir una invitación anticipada cuando abramos las puertas de Vinka.
             </p>
 
-            <form onSubmit={handleWaitlistSubmit} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <form onSubmit={handleWaitlistSubmit} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <input 
                 type="email" 
                 placeholder="tu.correo@ejemplo.com"
@@ -315,7 +299,7 @@ export default function ComingSoon() {
 
       {/* Footer */}
       <footer className="site-footer">
-        <div className="container">
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <img 
             src="/logo-coffee.png" 
             alt="Vinka" 
