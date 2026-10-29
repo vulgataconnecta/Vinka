@@ -41,6 +41,7 @@ export default function ComingSoon() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [emailWaitlist, setEmailWaitlist] = useState('');
   const [waitlistDone, setWaitlistDone] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
 
   // Close modal on escape key
   useEffect(() => {
@@ -55,20 +56,24 @@ export default function ComingSoon() {
     e.preventDefault();
     if (!emailWaitlist) return;
 
+    setWaitlistLoading(true);
     try {
       await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source: 'waitlist', email: emailWaitlist })
       });
+      setWaitlistDone(true);
+      setEmailWaitlist('');
     } catch (err) {
       console.warn('Waitlist submission error:', err);
+    } finally {
+      setWaitlistLoading(false);
     }
 
-    setWaitlistDone(true);
     setTimeout(() => {
-      setEmailWaitlist('');
-    }, 4000);
+      setWaitlistDone(false);
+    }, 6000);
   };
 
   return (
@@ -305,9 +310,10 @@ export default function ComingSoon() {
               <button 
                 type="submit" 
                 className="btn-coffee-primary"
-                style={{ flex: '0 0 auto', width: 'auto', padding: '0.9rem 1.75rem' }}
+                disabled={waitlistLoading}
+                style={{ flex: '0 0 auto', width: 'auto', padding: '0.9rem 1.75rem', opacity: waitlistLoading ? 0.7 : 1 }}
               >
-                <span>Notificarme</span>
+                <span>{waitlistLoading ? 'Guardando...' : 'Notificarme'}</span>
                 <Send size={15} />
               </button>
             </form>
