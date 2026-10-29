@@ -1,0 +1,384 @@
+/* ==========================================================================
+   VINKA — LAN RESPONSIVE SYSTEM (Mobile-First + 16:9 Desktop Fluid)
+   ========================================================================== */
+
+.lan-page {
+  min-height: 100vh;
+  background: #FDFCFB;
+  color: #221610;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Ambient subtle background pattern */
+.lan-bg-ambient {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(163, 107, 66, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(184, 139, 74, 0.04) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Fluid responsive wrapper */
+.lan-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .lan-wrapper {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .lan-wrapper {
+    padding: 0 2.5rem;
+  }
+}
+
+/* --- Top Header --- */
+.lan-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(253, 252, 251, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(107, 78, 62, 0.1);
+  padding: 0.9rem 0;
+  transition: all 0.25s ease;
+}
+
+.lan-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lan-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #221610;
+  color: #FFFFFF;
+  border: 1px solid #3A261D;
+  padding: 0.55rem 1.35rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(34, 22, 16, 0.15);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lan-pill-btn:hover {
+  background: #3A261D;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(34, 22, 16, 0.22);
+}
+
+/* --- Hero & Carousel Section --- */
+.hero-carousel-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 1.5rem 0 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .hero-carousel-grid {
+    grid-template-columns: 1fr 1.08fr;
+    gap: 3.5rem;
+    align-items: center;
+    padding: 3.5rem 0 4.5rem;
+  }
+}
+
+/* Hero Typography */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #F7F3EE;
+  border: 1px solid #E5D9CD;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: #8C6A54;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1E140F;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 2.75rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .hero-title {
+    font-size: 3.25rem;
+  }
+}
+
+.hero-title .highlight {
+  color: #A36B42;
+  font-style: italic;
+  display: inline-block;
+}
+
+.hero-subtitle {
+  font-size: 0.98rem;
+  color: #6B4E3E;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .hero-subtitle {
+    font-size: 1.08rem;
+  }
+}
+
+/* Quick Quotation Card */
+.quote-widget {
+  background: linear-gradient(135deg, #FAF7F2 0%, #F4ECE1 100%);
+  border: 1px solid #DECFC2;
+  border-radius: 20px;
+  padding: 1.35rem;
+  box-shadow: 0 6px 24px rgba(34, 22, 16, 0.06);
+}
+
+@media (min-width: 768px) {
+  .quote-widget {
+    padding: 1.6rem 1.75rem;
+  }
+}
+
+/* Carousel Container */
+.carousel-card {
+  position: relative;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(34, 22, 16, 0.16);
+  background: #221610;
+}
+
+.carousel-viewport {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* 4:3 default on mobile */
+}
+
+@media (min-width: 1024px) {
+  .carousel-viewport {
+    padding-top: 72%; /* Optimal 16:9 desktop balance */
+    min-height: 480px;
+  }
+}
+
+.carousel-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.4s ease-in-out;
+}
+
+.carousel-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.2) 45%, rgba(15,10,7,0.85) 75%, rgba(15,10,7,0.98) 100%);
+}
+
+.carousel-badge-top {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(8px);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #221610;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 10;
+}
+
+.carousel-info-bottom {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  z-index: 10;
+  color: #FFFFFF;
+}
+
+.carousel-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin: 0;
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+
+@media (min-width: 768px) {
+  .carousel-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* --- Services Grid ("Cómo funciona") --- */
+.services-section {
+  padding: 3rem 0;
+  border-top: 1px solid rgba(107, 78, 62, 0.08);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+.service-card {
+  background: #FAF7F2;
+  border: 1px solid #EFE7DE;
+  border-radius: 20px;
+  padding: 1.6rem 1.5rem;
+  transition: all 0.25s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(34, 22, 16, 0.06);
+  border-color: #D5C4B4;
+}
+
+/* --- About & Contact Grid --- */
+.about-contact-section {
+  padding: 3.5rem 0 5rem;
+  background: linear-gradient(180deg, #FAF7F2 0%, #F5EFE9 100%);
+  border-top: 1px solid #EFE7DE;
+}
+
+.about-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .about-contact-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+}
+
+/* Contact Form Box */
+.contact-form-box {
+  background: #FFFFFF;
+  border: 1px solid #DECFC2;
+  border-radius: 22px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 12px 35px rgba(34, 22, 16, 0.06);
+}
+
+@media (min-width: 768px) {
+  .contact-form-box {
+    padding: 2.25rem 2rem;
+  }
+}
+
+/* Mobile Sticky Bottom Bar (Hidden on Tablet / Desktop) */
+.mobile-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(107, 78, 62, 0.15);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  z-index: 90;
+}
+
+@media (min-width: 768px) {
+  .mobile-sticky-bar {
+    display: none !important;
+  }
+}
+
+/* Login Modal - Responsive (Bottom sheet on mobile, centered modal on desktop) */
+.login-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 13, 9, 0.65);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: flex-end; /* mobile bottom sheet */
+  justify-content: center;
+  z-index: 200;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .login-modal-overlay {
+    align-items: center; /* desktop centered */
+    padding: 1.5rem;
+  }
+}
+
+.login-modal-box {
+  width: 100%;
+  max-width: 460px;
+  background: #FFFFFF;
+  border-radius: 24px 24px 0 0;
+  padding: 1.75rem 1.5rem 2.5rem;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.25);
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .login-modal-box {
+    border-radius: 24px;
+    padding: 2.25rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+}
