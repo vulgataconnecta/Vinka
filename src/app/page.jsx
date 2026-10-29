@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   Sparkles, 
   MapPin, 
@@ -50,9 +51,20 @@ export default function ComingSoon() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const handleWaitlistSubmit = (e) => {
+  const handleWaitlistSubmit = async (e) => {
     e.preventDefault();
     if (!emailWaitlist) return;
+
+    try {
+      await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'waitlist', email: emailWaitlist })
+      });
+    } catch (err) {
+      console.warn('Waitlist submission error:', err);
+    }
+
     setWaitlistDone(true);
     setTimeout(() => {
       setEmailWaitlist('');
@@ -183,24 +195,34 @@ export default function ComingSoon() {
                 </ul>
               </div>
 
-              <div>
-                <button 
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <Link 
+                  href="/registro-proveedor"
                   className="btn-coffee-primary" 
-                  style={{ background: 'var(--coffee-rich)' }}
+                  style={{ background: 'var(--coffee-deep)' }}
+                  id="btn-start-provider-register"
+                >
+                  <span>Empezar Registro de Proveedor</span>
+                  <ArrowRight size={18} />
+                </Link>
+
+                <button 
+                  className="btn-coffee-secondary" 
                   onClick={() => setActiveModal('provider')}
                   id="btn-survey-provider"
+                  style={{ padding: '0.85rem 1.4rem', fontSize: '0.92rem' }}
                 >
-                  <span>Encuesta para Proveedores</span>
-                  <ArrowRight size={18} />
+                  <span>Responder Encuesta Preliminar</span>
                 </button>
-                <div style={{ textAlign: 'center', marginTop: '0.85rem' }}>
+
+                <div style={{ textAlign: 'center', marginTop: '0.2rem' }}>
                   <a 
                     href={FORMS.provider.url} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="link-external-form"
                   >
-                    <span>Abrir formulario en otra pestaña</span>
+                    <span>Abrir encuesta en otra pestaña</span>
                     <ExternalLink size={13} />
                   </a>
                 </div>

@@ -234,15 +234,21 @@ const htmlContent = `<!DOCTYPE html>
     .signatures-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      margin-top: 24px;
-      padding-top: 10px;
+      gap: 36px;
+      margin-top: 75px;
     }
 
     .signature-card {
-      border-top: 1.5px solid #2D1D16;
-      padding-top: 6px;
       text-align: center;
+    }
+
+    .sig-space {
+      height: 60px;
+    }
+
+    .sig-line {
+      border-top: 1.5px solid #2D1D16;
+      margin-bottom: 6px;
     }
 
     .sig-name {
@@ -520,12 +526,14 @@ const htmlContent = `<!DOCTYPE html>
     <!-- Firmas -->
     <div class="signatures-container">
       <div class="signature-card">
-        <div style="height: 38px;"></div>
+        <div class="sig-space"></div>
+        <div class="sig-line"></div>
         <div class="sig-name">POR VINKA PLATFORM</div>
         <div class="sig-role">Dirección de Operaciones &amp; Curaduría Comercial</div>
       </div>
       <div class="signature-card">
-        <div style="height: 38px;"></div>
+        <div class="sig-space"></div>
+        <div class="sig-line"></div>
         <div class="sig-name">POR EL PROVEEDOR / AFILIADO</div>
         <div class="sig-role">Nombre y Firma del Titular o Representante Legal</div>
       </div>
