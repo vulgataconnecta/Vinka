@@ -20,7 +20,7 @@ const htmlContent = `<!DOCTYPE html>
 
     @page {
       size: letter;
-      margin: 14mm 16mm 14mm 16mm;
+      margin: 13mm 16mm 13mm 16mm;
     }
 
     * {
@@ -42,7 +42,7 @@ const htmlContent = `<!DOCTYPE html>
     .page {
       page-break-after: always;
       position: relative;
-      min-height: 250mm;
+      min-height: 252mm;
       padding-bottom: 12mm;
     }
 
@@ -101,22 +101,22 @@ const htmlContent = `<!DOCTYPE html>
     /* Headings */
     h2.section-heading {
       font-family: 'Outfit', sans-serif;
-      font-size: 10.5pt;
+      font-size: 10.2pt;
       font-weight: 700;
       color: #3D2B22;
       border-left: 3.5px solid #A36B42;
       padding-left: 8px;
-      margin: 12px 0 6px 0;
+      margin: 11px 0 6px 0;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
     h3.subsection-heading {
       font-family: 'Outfit', sans-serif;
-      font-size: 9pt;
+      font-size: 8.8pt;
       font-weight: 700;
       color: #422D22;
-      margin: 8px 0 4px 0;
+      margin: 8px 0 3px 0;
     }
 
     p {
@@ -152,34 +152,6 @@ const htmlContent = `<!DOCTYPE html>
     ul.legal-list li {
       margin-bottom: 4px;
       text-align: justify;
-    }
-
-    /* Tables & Spec Grids */
-    table.spec-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 8px 0;
-      font-size: 8pt;
-    }
-
-    table.spec-table th {
-      background: #3D2B22;
-      color: #FFFFFF;
-      text-align: left;
-      padding: 6px 8px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
-
-    table.spec-table td {
-      border: 1px solid #E2D7CC;
-      padding: 6px 8px;
-      vertical-align: top;
-    }
-
-    table.spec-table tr:nth-child(even) {
-      background: #FAF7F4;
     }
 
     /* Form Fill-in Fields */
@@ -221,7 +193,7 @@ const htmlContent = `<!DOCTYPE html>
     }
 
     .form-textarea-box {
-      min-height: 48px;
+      min-height: 52px;
       border: 1px dashed #A36B42;
       border-radius: 3px;
       background: #FAF7F4;
@@ -263,7 +235,7 @@ const htmlContent = `<!DOCTYPE html>
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 28px;
-      margin-top: 18px;
+      margin-top: 24px;
       padding-top: 10px;
     }
 
@@ -322,7 +294,7 @@ const htmlContent = `<!DOCTYPE html>
 
     <h2 class="section-heading">I. DECLARACIONES Y ANTECEDENTES</h2>
     <ul class="legal-list">
-      <li><strong>I.1. Declara VINKA:</strong> Ser una plataforma tecnológica especializada en el descubrimiento, promoción, alquiler y gestión automatizada de locaciones exclusivas, servicios para eventos y experiencias de primer nivel, orientada a conectar clientes calificados con proveedores de alto estándar.</li>
+      <li><strong>I.1. Declara VINKA:</strong> Ser una plataforma tecnológica especializada en el descubrimiento, promoción, alquiler y gestión de locaciones y servicios para eventos de primer nivel, orientada a conectar clientes calificados con proveedores de alto estándar.</li>
       <li><strong>I.2. Declara el PROVEEDOR:</strong> Ser una persona física o moral legalmente constituida o con facultades suficientes para disponer y comercializar el espacio, locación o catálogo de servicios ofrecidos, contando con los permisos comerciales vigentes.</li>
     </ul>
 
@@ -354,7 +326,7 @@ const htmlContent = `<!DOCTYPE html>
     </p>
 
     <div class="warning-box">
-      <strong>IMPORTANTE:</strong> Para que el perfil del Proveedor sea activado e indexado en el catálogo público de Vinka, es indispensable el cumplimiento estricto de las <strong>Especificaciones Técnicas y Curaduría</strong> detalladas en la Página 2 del presente documento.
+      <strong>IMPORTANTE:</strong> Para que el perfil del Proveedor sea activado e indexado en el catálogo público de Vinka, es indispensable el cumplimiento de las <strong>Sugerencias Visuales y Criterios de Calidad</strong> detallados en la Página 2 del presente documento.
     </div>
 
     <div class="page-footer">
@@ -363,93 +335,97 @@ const htmlContent = `<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- ==================== PÁGINA 2: ESPECIFICACIONES TÉCNICAS ==================== -->
+  <!-- ==================== PÁGINA 2: SUGERENCIAS VISUALES Y ESPECIFICACIONES ==================== -->
   <div class="page">
     <div class="doc-header">
       <div class="logo-container">
         <img src="${logoSrc}" alt="Vinka" class="logo-img">
       </div>
       <div class="doc-title-block">
-        <div class="doc-category-badge">Anexo Normativo &bull; Control de Calidad</div>
-        <div class="doc-main-title">ESPECIFICACIONES DE PUBLICACIÓN</div>
-        <div class="doc-meta">Estándares obligatorios para activación de catálogo en Vinka</div>
+        <div class="doc-category-badge">Anexo Técnico &bull; Guía de Calidad Visual</div>
+        <div class="doc-main-title">SUGERENCIAS Y PAUTAS DE PUBLICACIÓN</div>
+        <div class="doc-meta">Recomendaciones para que tu espacio o servicio luzca al máximo en Vinka</div>
       </div>
     </div>
 
-    <p style="margin-bottom: 8px;">
-      Para garantizar una experiencia visual prémium y mantener la confianza de nuestros clientes, cada proveedor registrado en <strong>Vinka</strong> debe someterse a los siguientes estándares de publicación:
+    <p style="margin-bottom: 6px;">
+      En <strong>Vinka</strong> promovemos tanto <strong>locaciones exclusivas</strong> como <strong>servicios especializados para eventos</strong> (banquetes, flores, barras, mobiliario, audio, etc.). Las siguientes pautas son recomendaciones orientadas a que tus 5 fotografías muestren el mejor ángulo de tu trabajo, transmitan profesionalismo y multipliquen tus contrataciones.
     </p>
 
     <h2 class="section-heading">1. NOMBRE COMERCIAL Y TITULARIDAD</h2>
     <p>
-      Debe registrarse el nombre comercial exacto con el que el público reconoce la marca o el recinto. No se permiten nombres genéricos, apodos no comerciales ni inclusión de teléfonos o emojis en el nombre visible del listado.
+      Debe registrarse el nombre comercial oficial con el que el público reconoce la marca, empresa o recinto (sin teléfonos, links ni emojis en el título visible).
     </p>
 
-    <h2 class="section-heading">2. PROTOCOLO OBLIGATORIO DE MATERIAL FOTOGRÁFICO</h2>
-    <div class="highlight-card">
-      <p style="margin-bottom: 4px;"><strong>Requisito Indispensable: Mínimo 5 Fotografías de Alta Calidad</strong></p>
-      <p style="font-size: 8.2pt; color: #5C473C; margin-bottom: 6px;">
-        Las imágenes son el factor principal de decisión para los organizadores de eventos. El Proveedor deberá entregar un paquete mínimo de 5 fotografías que cumplan rigurosamente con los siguientes lineamientos:
+    <h2 class="section-heading">2. GUÍA Y SUGERENCIAS VISUALES PARA TUS 5 FOTOGRAFÍAS</h2>
+    <p style="font-size: 8.2pt; color: #5C473C; margin-bottom: 6px;">
+      Requerimos un paquete de <strong>al menos 5 fotografías</strong> que serán <strong>verificadas por nuestro equipo de curaduría</strong> para asegurar que se vean impecables. Como la naturaleza de cada negocio es distinta, te sugerimos enfocar tus imágenes de acuerdo con tu categoría:
+    </p>
+
+    <!-- Dos columnas de sugerencias según tipo de proveedor -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0 8px 0;">
+      <!-- Columna Locaciones -->
+      <div class="highlight-card" style="margin: 0; padding: 8px 10px; background: #FAF7F4; border: 1px solid #DFCFC2;">
+        <div style="font-weight: 700; color: #3D2B22; font-size: 8.5pt; margin-bottom: 4px; border-bottom: 1.5px solid #DECFC2; padding-bottom: 3px;">
+          🏡 Si eres una LOCACIÓN / RECINTO:
+        </div>
+        <ul style="margin-left: 14px; font-size: 7.7pt; color: #4E392E; line-height: 1.45;">
+          <li><strong>1. Vista Principal / Portada:</strong> Fachada o perspectiva panorámica amplia, despejada y con excelente iluminación (horizontal).</li>
+          <li><strong>2. Área de Montaje:</strong> El espacio dispuesto para evento con mesas, sillería o pista, para que el cliente dimensione capacidad real.</li>
+          <li><strong>3. Arquitectura y Detalles:</strong> Acabados de los muros, techos, jardines cuidados, arcos o fuentes.</li>
+          <li><strong>4. El Espacio en Acción:</strong> El recinto vivo durante una celebración o evento real bien ambientado.</li>
+          <li><strong>5. Amenidad Diferencial:</strong> Alberca, terraza con vista, suite nupcial, barra de servicio o iluminación nocturna.</li>
+        </ul>
+      </div>
+
+      <!-- Columna Servicios -->
+      <div class="highlight-card" style="margin: 0; padding: 8px 10px; background: #FAF7F4; border: 1px solid #DFCFC2;">
+        <div style="font-weight: 700; color: #A36B42; font-size: 8.5pt; margin-bottom: 4px; border-bottom: 1.5px solid #DECFC2; padding-bottom: 3px;">
+          💐 Si eres un SERVICIO (Flores, Comida, DJ, etc.):
+        </div>
+        <ul style="margin-left: 14px; font-size: 7.7pt; color: #4E392E; line-height: 1.45;">
+          <li><strong>1. Producto Insignia:</strong> Centro de mesa floral espectacular, platillo gourmet emplatado o coctel de autor.</li>
+          <li><strong>2. Montaje Integral:</strong> La mesa completa decorada, la estación de comida/buffet o el escenario y cabina de DJ.</li>
+          <li><strong>3. Detalle y Frescura:</strong> Primer plano a la textura de flores, calidad de ingredientes, cristalería o acabados.</li>
+          <li><strong>4. Servicio en Vivo:</strong> Tu equipo preparando alimentos, sirviendo bebidas, montando flores o animando el evento.</li>
+          <li><strong>5. Variedad de Opciones:</strong> Muestra de versatilidad (distintos estilos florales, opciones de menú o sets de mobiliario).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Criterios para que se vean bien -->
+    <div class="highlight-card" style="background: #FFFBF7; border: 1px solid #EAD8C8; padding: 8px 10px; margin: 6px 0;">
+      <p style="font-weight: 700; color: #3D2B22; font-size: 8pt; margin-bottom: 3px;">
+        ✨ Criterios clave para que tus fotografías se vean increíbles y generen confianza:
       </p>
-      <table class="spec-table">
-        <thead>
-          <tr>
-            <th style="width: 18%;">Fotografía</th>
-            <th style="width: 32%;">Enfoque Requerido</th>
-            <th style="width: 50%;">Criterio de Calidad &amp; Validación Vinka</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Foto 1: Portada</strong></td>
-            <td>Vista panorámica o fachada principal.</td>
-            <td>Resolución mínima 1920x1080px (horizontal), iluminación diurna o nocturna profesional, sin autos ni elementos obstructivos.</td>
-          </tr>
-          <tr>
-            <td><strong>Foto 2: Espacio</strong></td>
-            <td>Área de montaje / capacidad de aforo.</td>
-            <td>Muestra el área con montaje real para evento (mesas, pista, escenario o mobiliario dispuesto).</td>
-          </tr>
-          <tr>
-            <td><strong>Foto 3: Detalle</strong></td>
-            <td>Arquitectura, acabados o textura.</td>
-            <td>Detalles finos del espacio o servicio (iluminación, barra, texturas, cristalería, jardinería cuidada).</td>
-          </tr>
-          <tr>
-            <td><strong>Foto 4: Servicio</strong></td>
-            <td>Experiencia en vivo / operación.</td>
-            <td>Platillos terminados, montaje de barras, decoración en acción o servicio activo con armonía visual.</td>
-          </tr>
-          <tr>
-            <td><strong>Foto 5: Adicional</strong></td>
-            <td>Amenidad diferencial o plus.</td>
-            <td>Área lounge, vista panorámica, suite nupcial, alberca o iluminación ambiental nocturna.</td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="font-size: 7.6pt; color: #A36B42; font-weight: 600; margin-top: 4px;">
-        &bull; PROCESO DE VERIFICACIÓN: Todas las fotografías son auditadas por el equipo de curaduría de Vinka. Se rechazarán fotos borrosas, capturas de pantalla, imágenes con marcas de agua de terceros, marcas de celular o con baja resolución.
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-size: 7.4pt; color: #5C473C; line-height: 1.4;">
+        <div><strong>Luz Natural o Cálida:</strong> Evita fotos oscuras o con flash directo de celular que aplane texturas y colores.</div>
+        <div><strong>Nitidez y Resolución:</strong> Mínimo 1080p, archivos originales en alta definición. No capturas de pantalla de redes sociales.</div>
+        <div><strong>Orden y Limpieza:</strong> Espacios despejados sin cables sueltos, cajas, basura ni elementos que distraigan la atención.</div>
+      </div>
+      <div style="font-size: 7.2pt; color: #A36B42; font-weight: 600; margin-top: 5px; border-top: 1px dashed #DECFC2; padding-top: 3px;">
+        &bull; PROCESO DE VERIFICACIÓN: El equipo de curaduría de Vinka revisará y optimizará las fotografías para asegurarse de que cumplan con estos estándares antes de activar el perfil público.
       </div>
     </div>
 
     <h2 class="section-heading">3. DESCRIPCIÓN CON LÍMITE MÁXIMO DE PALABRAS</h2>
     <p>
-      La descripción en el perfil de Vinka está diseñada para ser ágil, inspiradora y directa. Debe respetar un <strong>LÍMITE MÁXIMO DE 180 PALABRAS</strong> estructuradas en 3 bloques clave:
+      La descripción en Vinka debe ser directa, inspiradora y clara, con un <strong>LÍMITE MÁXIMO DE 180 PALABRAS</strong> estructuradas en 3 puntos:
     </p>
     <ul class="legal-list">
-      <li><strong>Esencia y Atmósfera (40-60 palabras):</strong> Qué hace único al lugar o servicio, estilo arquitectónico o concepto.</li>
-      <li><strong>Capacidad y Versatilidad (40-60 palabras):</strong> Tipos de eventos ideales (bodas, corporativos, aniversarios) y aforo óptimo.</li>
-      <li><strong>Amenidades Incluidas (40-60 palabras):</strong> Resumen de beneficios (estacionamiento, climatización, cocina, sonido).</li>
+      <li><strong>Esencia y Especialidad (40-60 palabras):</strong> Qué define a tu marca o recinto, estilo, sazón o propuesta de valor.</li>
+      <li><strong>Capacidad o Alcance (40-60 palabras):</strong> Tipos de eventos ideales (bodas, aniversarios, cenas íntimas, corporativos) y volumen de atención.</li>
+      <li><strong>Beneficios Incluidos (40-60 palabras):</strong> Resumen de lo que incluye tu servicio o espacio (personal, montaje, traslados, etc.).</li>
     </ul>
 
     <h2 class="section-heading">4. CATEGORÍAS AFINES Y ETIQUETAS DE BÚSQUEDA</h2>
     <p>
-      Cada afiliado se clasificará bajo una <strong>Categoría Primaria</strong> y hasta dos <strong>Subcategorías de Especialidad</strong> para que los filtros de recomendación inteligente de Vinka sugieran el servicio a los clientes correctos.
+      Cada proveedor se clasificará en su categoría principal y subcategorías para ser recomendado con precisión a los usuarios que organicen eventos.
     </p>
 
     <div class="page-footer">
-      <span>Vinka Platform &copy; 2026 &bull; Especificaciones Técnicas de Publicación</span>
-      <span>Página 2 de 3 &bull; Criterios de Aprobación</span>
+      <span>Vinka Platform &copy; 2026 &bull; Pautas Visuales y Recomendaciones de Calidad</span>
+      <span>Página 2 de 3 &bull; Criterios de Publicación</span>
     </div>
   </div>
 
@@ -494,7 +470,7 @@ const htmlContent = `<!DOCTYPE html>
         <div class="form-input-line"></div>
       </div>
       <div class="form-field full">
-        <span class="form-label">Ubicación / Dirección Completa (Ciudad, Municipio, Zona):</span>
+        <span class="form-label">Ubicación / Dirección Completa (Ciudad, Municipio, Zona de Cobertura):</span>
         <div class="form-input-line"></div>
       </div>
     </div>
@@ -506,25 +482,25 @@ const htmlContent = `<!DOCTYPE html>
       <div class="check-item"><span class="square-box"></span> Terraza / Rooftop / Salón</div>
       <div class="check-item"><span class="square-box"></span> Banquetes &amp; Catering</div>
       <div class="check-item"><span class="square-box"></span> Mobiliario &amp; Decoración</div>
+      <div class="check-item"><span class="square-box"></span> Floristería &amp; Diseño Floral</div>
       <div class="check-item"><span class="square-box"></span> Audio, DJ &amp; Iluminación</div>
       <div class="check-item"><span class="square-box"></span> Fotografía &amp; Video</div>
       <div class="check-item"><span class="square-box"></span> Mixología &amp; Barras</div>
       <div class="check-item"><span class="square-box"></span> Wedding / Event Planner</div>
-      <div class="check-item"><span class="square-box"></span> Música en Vivo / Shows</div>
     </div>
 
     <!-- Descripción Oficial -->
     <h2 class="section-heading" style="margin-top: 6px;">3. DESCRIPCIÓN OFICIAL PARA LA PÁGINA (MÁXIMO 180 PALABRAS)</h2>
     <div class="form-field full" style="margin-bottom: 6px;">
       <span class="form-label">Texto descriptivo curado (Destaca ambiente, servicios y propuesta de valor):</span>
-      <div class="form-textarea-box" style="height: 52px;"></div>
+      <div class="form-textarea-box" style="height: 56px;"></div>
     </div>
 
     <!-- Especificaciones Operativas -->
-    <h2 class="section-heading" style="margin-top: 4px;">4. ESPECIFICACIONES DE OPERACIÓN &amp; FOTOGRAFÍAS</h2>
+    <h2 class="section-heading" style="margin-top: 4px;">4. ESPECIFICACIONES DE OPERACIÓN &amp; ENTREGA DE FOTOGRAFÍAS</h2>
     <div class="form-grid">
       <div class="form-field">
-        <span class="form-label">Capacidad de Personas (Mín - Máx):</span>
+        <span class="form-label">Capacidad de Personas o Alcance del Servicio (Mín - Máx):</span>
         <div class="form-input-line"></div>
       </div>
       <div class="form-field">
@@ -532,19 +508,13 @@ const htmlContent = `<!DOCTYPE html>
         <div class="form-input-line"></div>
       </div>
       <div class="form-field full">
-        <span class="form-label">Enlace a Carpeta Cloud de las 5 Fotografías de Alta Calidad (Google Drive / Dropbox):</span>
+        <span class="form-label">Enlace Cloud a las 5 Fotografías Sugeridas (Google Drive / Dropbox / WeTransfer):</span>
         <div class="form-input-line"></div>
       </div>
     </div>
 
-    <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 7.2pt; background: #F7F3EE; padding: 5px 8px; border-radius: 4px; border: 1px solid #DECFC2;">
-      <div><strong>Checklist Vinka:</strong></div>
-      <div><span class="square-box"></span> Foto 1 (Portada)</div>
-      <div><span class="square-box"></span> Foto 2 (Espacio)</div>
-      <div><span class="square-box"></span> Foto 3 (Detalle)</div>
-      <div><span class="square-box"></span> Foto 4 (Servicio)</div>
-      <div><span class="square-box"></span> Foto 5 (Plus)</div>
-      <div style="color: #A36B42;"><strong>&bull; Estatus: [ &nbsp; ] Verificadas y Aprobadas</strong></div>
+    <div style="margin-top: 4px; font-size: 7.5pt; background: #F7F3EE; padding: 6px 10px; border-radius: 4px; border: 1px solid #DECFC2; color: #5C473C; text-align: justify;">
+      <strong>Aclaración sobre el material fotográfico:</strong> Las 5 fotografías enviadas en el enlace serán verificadas por el equipo de curaduría de Vinka para confirmar su nitidez y buena resolución, asegurando que tu perfil refleje la más alta calidad y se vea impecable para los clientes.
     </div>
 
     <!-- Firmas -->
@@ -586,5 +556,5 @@ execFile(edgePath, [
     console.error('Error generating PDF:', err);
     process.exit(1);
   }
-  console.log('PDF Contract successfully generated at:', pdfOutputPath);
+  console.log('PDF Contract successfully updated at:', pdfOutputPath);
 });
