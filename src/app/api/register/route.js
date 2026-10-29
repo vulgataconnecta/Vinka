@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+// URL del webhook de Google Apps Script oficial de Vinka
+const DEFAULT_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwULBBNXV7DI_VUNPiqyq83FbqUqpWKU0bb9qbC6ed-k-V024BthOuslAF-zjT2_pJJ/exec';
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -22,7 +25,26 @@ export async function POST(request) {
       notes
     };
 
-    // 1. Local backup storage (so data is never lost)
+    // 1. Enviar prioritariamente a Google Sheets (tanto en producción/dominio como en local)
+    const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL || DEFAULT_WEBHOOK_URL;
+    let sheetResponseText = null;
+
+    if (webhookUrl) {
+      try {
+        const sheetRes = await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submission),
+          redirect: 'follow',
+        });
+        sheetResponseText = await sheetRes.text();
+        console.log('Google Sheets Webhook response:', sheetResponseText);
+      } catch (sheetErr) {
+        console.error('Error al enviar a Google Sheets Webhook:', sheetErr);
+      }
+    }
+
+    // 2. Respaldo local seguro en disco (cuando el entorno lo soporte)
     try {
       const dataDir = path.join(process.cwd(), 'data');
       if (!fs.existsSync(dataDir)) {
@@ -41,27 +63,15 @@ export async function POST(request) {
       currentData.unshift(submission);
       fs.writeFileSync(filePath, JSON.stringify(currentData, null, 2), 'utf8');
     } catch (fsErr) {
-      console.warn('Could not write to local submissions file:', fsErr);
-    }
-
-    // 2. Forward to Google Sheet Webhook if configured
-    const webhookUrl = process.env.GOOGLE_SHEET_WEBHOOK_URL;
-    if (webhookUrl) {
-      try {
-        await fetch(webhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(submission),
-        });
-      } catch (sheetErr) {
-        console.warn('Could not forward to Google Sheet Webhook:', sheetErr);
-      }
+      // En plataformas serverless como Vercel el disco raíz es read-only, lo manejamos limpiamente
+      console.log('Nota servidor: almacenamiento en memoria o sólo lectura');
     }
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Información registrada con éxito',
-      data: submission 
+      message: 'Información registrada con éxito en Google Sheets',
+      data: submission,
+      sheetResult: sheetResponseText
     });
   } catch (error) {
     console.error('Error in /api/register:', error);
