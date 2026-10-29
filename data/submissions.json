@@ -1,5 +1,23 @@
 [
   {
+    "timestamp": "2026-10-29T15:04:50.811Z",
+    "source": "waitlist",
+    "name": "",
+    "email": "cliente.nuevo@gmail.com",
+    "phone": "",
+    "category": "",
+    "notes": ""
+  },
+  {
+    "timestamp": "2026-10-29T15:04:35.163Z",
+    "source": "registro_proveedor",
+    "name": "Villa Paraíso Real",
+    "email": "eventos@villaparaiso.com",
+    "phone": "656 987 6543",
+    "category": "Terraza / Rooftop / Salón",
+    "notes": "Capacidad 450 personas con vista panoramica."
+  },
+  {
     "timestamp": "2026-10-29T14:45:54.509Z",
     "source": "registro_proveedor",
     "name": "Hacienda El Rosal",
