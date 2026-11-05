@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" width="480" height="300">
+  <!-- Soft Paper Background -->
+  <rect width="480" height="300" rx="10" fill="#F4EFEA" />
+  
+  <!-- Document Sheet -->
+  <rect x="24" y="14" width="432" height="272" rx="6" fill="#FFFFFF" stroke="#E2D5C8" stroke-width="1" />
+
+  <!-- Top Left Logo Mark -->
+  <g transform="translate(46, 30)">
+    <path d="M4 4 L12 12 M12 4 L4 12 M2 8 L14 8 M8 2 L8 14" stroke="#221610" stroke-width="1.8" stroke-linecap="round" />
+    <text x="0" y="24" fill="#221610" font-family="system-ui, -apple-system, sans-serif" font-size="7.5" font-weight="800" letter-spacing="1.5">VINKA</text>
+  </g>
+
+  <!-- Top Right Legal Header -->
+  <text x="434" y="34" text-anchor="end" fill="#A36B42" font-family="system-ui, -apple-system, sans-serif" font-size="6.8" font-weight="700" letter-spacing="0.8">PLATAFORMA OFICIAL VINKA • DOCUMENTO LEGAL</text>
+  <text x="434" y="47" text-anchor="end" fill="#1E140F" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="800">CONVENIO DE AFILIACIÓN Y PUBLICACIÓN</text>
+  <text x="434" y="57" text-anchor="end" fill="#7D6558" font-family="system-ui, -apple-system, sans-serif" font-size="6.8">Folio: VK-PROV-2026-________ • Fecha: ___/___/2026</text>
+
+  <!-- Header Divider -->
+  <line x1="46" y1="65" x2="434" y2="65" stroke="#221610" stroke-width="1.5" />
+
+  <!-- Intro Paragraph Lines -->
+  <rect x="46" y="74" width="388" height="4" rx="2" fill="#D5C4B4" />
+  <rect x="46" y="82" width="360" height="4" rx="2" fill="#E5D9CE" />
+
+  <!-- Section I -->
+  <rect x="46" y="96" width="3" height="12" rx="1.5" fill="#A36B42" />
+  <text x="54" y="105" fill="#1E140F" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="800">I. DECLARACIONES Y ANTECEDENTES</text>
+  
+  <circle cx="50" cy="117" r="1.5" fill="#A36B42" />
+  <rect x="56" y="114" width="378" height="4" rx="2" fill="#CFC0B3" />
+  <rect x="56" y="121" width="330" height="4" rx="2" fill="#E5D9CE" />
+
+  <circle cx="50" cy="133" r="1.5" fill="#A36B42" />
+  <rect x="56" y="130" width="370" height="4" rx="2" fill="#CFC0B3" />
+  <rect x="56" y="137" width="290" height="4" rx="2" fill="#E5D9CE" />
+
+  <!-- Section II -->
+  <rect x="46" y="150" width="3" height="12" rx="1.5" fill="#A36B42" />
+  <text x="54" y="159" fill="#1E140F" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="800">II. CLÁUSULAS CONTRACTUALES</text>
+
+  <text x="46" y="172" fill="#2D1D16" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="700">PRIMERA. OBJETO DEL CONVENIO</text>
+  <rect x="46" y="177" width="388" height="3.5" rx="1.75" fill="#D5C4B4" />
+  <rect x="46" y="183" width="345" height="3.5" rx="1.75" fill="#E5D9CE" />
+
+  <text x="46" y="197" fill="#2D1D16" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="700">SEGUNDA. COMPROMISOS Y POLÍTICA DE COMISIÓN CERO (0%)</text>
+  <rect x="46" y="202" width="388" height="3.5" rx="1.75" fill="#D5C4B4" />
+  <rect x="46" y="208" width="365" height="3.5" rx="1.75" fill="#E5D9CE" />
+
+  <!-- Callout Box at Bottom -->
+  <rect x="46" y="224" width="388" height="32" rx="4" fill="#FAF5F0" stroke="#E8D8C8" stroke-width="1" />
+  <rect x="46" y="224" width="3.5" height="32" rx="1.5" fill="#A36B42" />
+  <text x="56" y="237" fill="#221610" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="700">IMPORTANTE: Cumplimiento de Sugerencias Visuales y Criterios de Calidad</text>
+  <rect x="56" y="243" width="320" height="3.5" rx="1.75" fill="#D5C4B4" />
+
+  <!-- Footer -->
+  <line x1="46" y1="266" x2="434" y2="266" stroke="#EBE3DC" stroke-width="1" />
+  <text x="46" y="276" fill="#A58F82" font-family="system-ui, -apple-system, sans-serif" font-size="6.5">Vinka Platform © 2026 • Plataforma Digital de Locaciones</text>
+  <text x="434" y="276" text-anchor="end" fill="#A58F82" font-family="system-ui, -apple-system, sans-serif" font-size="6.5">Página 1 de 3 • Convenio Oficial</text>
+</svg>
+

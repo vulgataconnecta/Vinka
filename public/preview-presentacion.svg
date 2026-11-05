@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" width="480" height="300">
+  <defs>
+    <linearGradient id="bgDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#221711" />
+      <stop offset="100%" stop-color="#17100C" />
+    </linearGradient>
+    <radialGradient id="glowGold" cx="85%" cy="20%" r="55%">
+      <stop offset="0%" stop-color="#A36B42" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#17100C" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="480" height="300" rx="10" fill="url(#bgDark)" />
+  <rect width="480" height="300" rx="10" fill="url(#glowGold)" />
+
+  <!-- Top Header: Vinka Emblem + Brand -->
+  <g transform="translate(32, 28)">
+    <path d="M10 0 L13 7 L20 10 L13 13 L10 20 L7 13 L0 10 L7 7 Z" fill="none" stroke="#C89B6E" stroke-width="1.5" />
+    <circle cx="10" cy="10" r="2" fill="#C89B6E" />
+    <text x="28" y="14" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="700" letter-spacing="2.5">VINKA</text>
+  </g>
+
+  <!-- Top Right Badge -->
+  <g transform="translate(274, 24)">
+    <rect width="174" height="22" rx="11" fill="none" stroke="#5A4538" stroke-width="1" />
+    <text x="87" y="14" text-anchor="middle" fill="#B89A82" font-family="system-ui, -apple-system, sans-serif" font-size="6.8" font-weight="600" letter-spacing="1.1">ALIANZA PROVEEDORES FUNDADORES</text>
+  </g>
+
+  <!-- Eyebrow -->
+  <text x="32" y="92" fill="#C48B5C" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="700" letter-spacing="2">EVERY EVENT, CONNECTED.</text>
+
+  <!-- Main Presentation Title -->
+  <text x="32" y="124" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="23" font-weight="800" letter-spacing="-0.4">El ecosistema digital para</text>
+  <text x="32" y="152" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="23" font-weight="800" letter-spacing="-0.4">conectar eventos con sus</text>
+  <text x="32" y="180" fill="#FFFFFF" font-family="system-ui, -apple-system, sans-serif" font-size="23" font-weight="800" letter-spacing="-0.4">mejores creadores.</text>
+
+  <!-- Subtitle -->
+  <text x="32" y="208" fill="#B8A99E" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="400">Una plataforma tecnológica diseñada para descubrir locaciones exclusivas y</text>
+  <text x="32" y="222" fill="#B8A99E" font-family="system-ui, -apple-system, sans-serif" font-size="9.5" font-weight="400">contratar servicios profesionales sin fricción.</text>
+
+  <!-- Bottom Divider & Footer -->
+  <line x1="32" y1="256" x2="448" y2="256" stroke="#3A2B22" stroke-width="1" />
+  <text x="32" y="274" fill="#8E796B" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="500">Lanzamiento Regional — Ciudad Juárez &amp; Frontera Norte</text>
+  <text x="448" y="274" text-anchor="end" fill="#C89B6E" font-family="system-ui, -apple-system, sans-serif" font-size="8.5" font-weight="700">vinka.club</text>
+</svg>
+

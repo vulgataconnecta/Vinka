@@ -16,7 +16,8 @@ import {
   Send,
   Compass,
   Maximize2,
-  Minimize2
+  Minimize2,
+  FileText
 } from 'lucide-react';
 
 const FORMS = {
@@ -79,6 +80,16 @@ export default function ComingSoon() {
   return (
     <div style={{ position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div className="bg-ambient-pattern" />
+
+      {/* Top Right Navigation Bar with Documentos Button */}
+      <header className="top-nav-home">
+        <div className="container" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Link href="/documentos" className="btn-top-documentos" id="btn-nav-documentos">
+            <FileText size={16} />
+            <span>Documentos</span>
+          </Link>
+        </div>
+      </header>
 
       {/* Main Content */}
       <main style={{ flex: 1 }}>
