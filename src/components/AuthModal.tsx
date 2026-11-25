@@ -22,31 +22,34 @@ export function AuthModal() {
   const [city, setCity] = useState('')
   const [error, setError] = useState('')
 
+  const [submitting, setSubmitting] = useState(false)
+
   if (!authModalOpen) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     if (!email.trim() || !password) {
       setError('Ingresa tu correo electrónico y contraseña.')
       return
     }
-    if (mode === 'login') {
-      const res = loginWithCredentials(email, password)
-      if (!res.ok) setError(res.error || 'Credenciales incorrectas.')
-      else {
-        setPassword('')
+    setSubmitting(true)
+    try {
+      if (mode === 'login') {
+        const res = await loginWithCredentials(email, password)
+        if (!res.ok) setError(res.error || 'Credenciales incorrectas.')
+        else setPassword('')
+      } else {
+        if (!name.trim()) {
+          setError('Ingresa tu nombre completo.')
+          return
+        }
+        const res = await registerAccount({ name, email, password, role, city })
+        if (!res.ok) setError(res.error || 'No se pudo crear la cuenta.')
+        else setPassword('')
       }
-    } else {
-      if (!name.trim()) {
-        setError('Ingresa tu nombre completo.')
-        return
-      }
-      const res = registerAccount({ name, email, password, role, city })
-      if (!res.ok) setError(res.error || 'No se pudo crear la cuenta.')
-      else {
-        setPassword('')
-      }
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -209,9 +212,14 @@ export function AuthModal() {
 
             <button
               type="submit"
-              className="btn-vinka w-full font-bold text-sm py-3 cursor-pointer"
+              disabled={submitting}
+              className="btn-vinka w-full font-bold text-sm py-3 disabled:opacity-60 cursor-pointer"
             >
-              {mode === 'login' ? 'Entrar a mi cuenta' : 'Crear mi cuenta'}
+              {submitting
+                ? 'Procesando...'
+                : mode === 'login'
+                  ? 'Entrar a mi cuenta'
+                  : 'Crear mi cuenta'}
             </button>
           </form>
         </div>

@@ -19,10 +19,11 @@ import {
   UtensilsCrossed,
   Wand2,
 } from 'lucide-react'
-import heroFallback from '../assets/hero-evento.png'
 import { useVinka } from '../context/VinkaContext'
 import type { EventQuote } from '../types/vinka'
 import { EventProgressBar } from './EventProgressBar'
+
+const heroFallback = '/images/hero-evento.png'
 
 function CatGlyph({ icon }: { icon: string }) {
   switch (icon) {
@@ -171,12 +172,16 @@ export function EventBuilder() {
     })
   }
 
-  const handleConfirm = () => {
-    const combinedNotes = [vibe ? `Ambiente: ${vibe}.` : '', ownVenue ? 'El cliente cuenta con lugar propio.' : '', notes]
+  const handleConfirm = async () => {
+    const combinedNotes = [
+      vibe ? `Ambiente: ${vibe}.` : '',
+      ownVenue ? 'El cliente cuenta con lugar propio.' : '',
+      notes,
+    ]
       .filter(Boolean)
       .join(' ')
 
-    const res = submitEventQuote({
+    const res = await submitEventQuote({
       occasion: occasion.trim() || 'Celebración en familia',
       dateTime,
       guests,

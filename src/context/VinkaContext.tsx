@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
-import { DEFAULT_ADMIN_USER, DEFAULT_CATEGORIES, DEFAULT_EVENT_TYPES } from '../data/defaults'
+'use client'
+
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import type {
   AdminTab,
   AppRoute,
   CategoryItem,
   ClientTab,
-  EventBookingItem,
   EventQuote,
   InvoiceRecord,
   ListingItem,
@@ -15,7 +15,7 @@ import type {
   SearchFilters,
   UserAccount,
   UserRole,
-} from '../types/vinka'
+} from '@/types/vinka'
 
 interface VinkaContextValue {
   route: AppRoute
@@ -30,21 +30,27 @@ interface VinkaContextValue {
   adminTab: AdminTab
   setAdminTab: (t: AdminTab) => void
 
+  loadingData: boolean
+  refreshData: () => Promise<void>
+
   currentUser: UserAccount | null
   authModalOpen: boolean
   authModalIntent: 'general' | 'quote-checkout' | 'provider'
   openAuthModal: (intent?: 'general' | 'quote-checkout' | 'provider') => void
   closeAuthModal: () => void
-  loginWithCredentials: (email: string, password: string) => { ok: boolean; error?: string }
+  loginWithCredentials: (
+    email: string,
+    password: string,
+  ) => Promise<{ ok: boolean; error?: string }>
   registerAccount: (data: {
     name: string
     email: string
     password: string
     role: Exclude<UserRole, 'admin'>
     city?: string
-  }) => { ok: boolean; error?: string }
-  logout: () => void
-  updateProfile: (data: Partial<UserAccount>) => void
+  }) => Promise<{ ok: boolean; error?: string }>
+  logout: () => Promise<void>
+  updateProfile: (data: Partial<UserAccount>) => Promise<void>
 
   searchFilters: SearchFilters
   setSearchFilters: React.Dispatch<React.SetStateAction<SearchFilters>>
@@ -52,41 +58,41 @@ interface VinkaContextValue {
   toggleFavorite: (listingId: string) => void
 
   users: UserAccount[]
-  toggleUserStatus: (userId: string) => void
+  toggleUserStatus: (userId: string) => Promise<void>
 
   categories: CategoryItem[]
-  addCategory: (cat: Omit<CategoryItem, 'id'>) => void
-  deleteCategory: (id: string) => void
+  addCategory: (cat: Omit<CategoryItem, 'id'>) => Promise<void>
+  deleteCategory: (id: string) => Promise<void>
   eventTypes: string[]
-  addEventType: (name: string) => void
-  deleteEventType: (name: string) => void
+  addEventType: (name: string) => Promise<void>
+  deleteEventType: (name: string) => Promise<void>
 
   listings: ListingItem[]
   isListingAvailableOnDate: (listingId: string, dateTime?: string) => boolean
-  addListing: (item: Omit<ListingItem, 'id' | 'rating' | 'reviews'>) => void
-  updateListing: (id: string, patch: Partial<ListingItem>) => void
-  deleteListing: (id: string) => void
-  approveListing: (id: string) => void
-  rejectListing: (id: string, reason: string) => void
+  addListing: (item: Omit<ListingItem, 'id' | 'rating' | 'reviews'>) => Promise<void>
+  updateListing: (id: string, patch: Partial<ListingItem>) => Promise<void>
+  deleteListing: (id: string) => Promise<void>
+  approveListing: (id: string) => Promise<void>
+  rejectListing: (id: string, reason: string) => Promise<void>
 
   events: EventQuote[]
   pendingQuoteDraft: PendingQuoteDraft | null
   setPendingQuoteDraft: React.Dispatch<React.SetStateAction<PendingQuoteDraft | null>>
-  submitEventQuote: (draft: PendingQuoteDraft) => {
+  submitEventQuote: (draft: PendingQuoteDraft) => Promise<{
     ok: boolean
     needsAuth?: boolean
     quote?: EventQuote
-  }
-  updateEventStatus: (eventId: string, status: EventQuote['status']) => void
-  cancelEvent: (eventId: string) => void
-  deleteEvent: (eventId: string) => void
+  }>
+  updateEventStatus: (eventId: string, status: EventQuote['status']) => Promise<void>
+  cancelEvent: (eventId: string) => Promise<void>
+  deleteEvent: (eventId: string) => Promise<void>
   respondToBookingItem: (
     eventId: string,
     itemId: string,
     decision: 'aceptado' | 'rechazado',
     note?: string,
-  ) => void
-  replaceBookingItem: (eventId: string, itemId: string, newListingId: string) => void
+  ) => Promise<void>
+  replaceBookingItem: (eventId: string, itemId: string, newListingId: string) => Promise<void>
 
   invoices: InvoiceRecord[]
   requestInvoice: (params: {
@@ -94,12 +100,14 @@ interface VinkaContextValue {
     rfc: string
     razonSocial: string
     usoCfdi: string
-  }) => InvoiceRecord | null
+  }) => Promise<InvoiceRecord | null>
 
   applications: ProviderApplication[]
-  submitProviderApplication: (app: Omit<ProviderApplication, 'id' | 'status' | 'submittedAt'>) => void
-  approveApplication: (appId: string) => void
-  rejectApplication: (appId: string, reason: string) => void
+  submitProviderApplication: (
+    app: Omit<ProviderApplication, 'id' | 'status' | 'submittedAt'>,
+  ) => Promise<void>
+  approveApplication: (appId: string) => Promise<void>
+  rejectApplication: (appId: string, reason: string) => Promise<void>
 
   toast: string | null
   showToast: (msg: string) => void
@@ -107,25 +115,7 @@ interface VinkaContextValue {
 
 const VinkaContext = createContext<VinkaContextValue | null>(null)
 
-const STORAGE_KEY = 'vinka_prod_state_v1'
-
-function loadSaved<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return fallback
-    const parsed = JSON.parse(raw)
-    return parsed[key] !== undefined ? parsed[key] : fallback
-  } catch {
-    return fallback
-  }
-}
-
-function ensureAdminPresent(list: UserAccount[]): UserAccount[] {
-  const hasAdmin = list.some(
-    (u) => u.email.toLowerCase() === DEFAULT_ADMIN_USER.email.toLowerCase(),
-  )
-  return hasAdmin ? list : [DEFAULT_ADMIN_USER, ...list]
-}
+const FAVORITES_KEY = 'vinka_favorites_v2'
 
 export function VinkaProvider({ children }: { children: React.ReactNode }) {
   const [route, setRouteRaw] = useState<AppRoute>('landing')
@@ -135,29 +125,16 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
   const [providerTab, setProviderTab] = useState<ProviderTab>('agendas')
   const [adminTab, setAdminTab] = useState<AdminTab>('proveedores')
 
-  const [users, setUsers] = useState<UserAccount[]>(() =>
-    ensureAdminPresent(loadSaved<UserAccount[]>('users', [DEFAULT_ADMIN_USER])),
-  )
-  const [currentUserId, setCurrentUserId] = useState<string | null>(() =>
-    loadSaved<string | null>('currentUserId', null),
-  )
-  const [categories, setCategories] = useState<CategoryItem[]>(() =>
-    loadSaved<CategoryItem[]>('categories', DEFAULT_CATEGORIES),
-  )
-  const [eventTypes, setEventTypes] = useState<string[]>(() =>
-    loadSaved<string[]>('eventTypes', DEFAULT_EVENT_TYPES),
-  )
-  const [listings, setListings] = useState<ListingItem[]>(() =>
-    loadSaved<ListingItem[]>('listings', []),
-  )
-  const [events, setEvents] = useState<EventQuote[]>(() => loadSaved<EventQuote[]>('events', []))
-  const [invoices, setInvoices] = useState<InvoiceRecord[]>(() =>
-    loadSaved<InvoiceRecord[]>('invoices', []),
-  )
-  const [applications, setApplications] = useState<ProviderApplication[]>(() =>
-    loadSaved<ProviderApplication[]>('applications', []),
-  )
-  const [favorites, setFavorites] = useState<string[]>(() => loadSaved<string[]>('favorites', []))
+  const [loadingData, setLoadingData] = useState(true)
+  const [currentUser, setCurrentUser] = useState<UserAccount | null>(null)
+  const [users, setUsers] = useState<UserAccount[]>([])
+  const [categories, setCategories] = useState<CategoryItem[]>([])
+  const [eventTypes, setEventTypes] = useState<string[]>([])
+  const [listings, setListings] = useState<ListingItem[]>([])
+  const [events, setEvents] = useState<EventQuote[]>([])
+  const [invoices, setInvoices] = useState<InvoiceRecord[]>([])
+  const [applications, setApplications] = useState<ProviderApplication[]>([])
+  const [favorites, setFavorites] = useState<string[]>([])
 
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     dateTime: '',
@@ -165,42 +142,54 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
     capacity: '',
   })
   const [pendingQuoteDraft, setPendingQuoteDraft] = useState<PendingQuoteDraft | null>(null)
-
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [authModalIntent, setAuthModalIntent] = useState<'general' | 'quote-checkout' | 'provider'>(
     'general',
   )
   const [toast, setToast] = useState<string | null>(null)
 
-  const currentUser = users.find((u) => u.id === currentUserId) ?? null
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          users,
-          currentUserId,
-          categories,
-          eventTypes,
-          listings,
-          events,
-          invoices,
-          applications,
-          favorites,
-        }),
-      )
-    } catch {
-      // ignore storage quota errors
-    }
-  }, [users, currentUserId, categories, eventTypes, listings, events, invoices, applications, favorites])
-
-  const showToast = (msg: string) => {
+  const showToast = useCallback((msg: string) => {
     setToast(msg)
     window.setTimeout(() => {
       setToast((prev) => (prev === msg ? null : prev))
     }, 3800)
+  }, [])
+
+  const refreshData = useCallback(async () => {
+    try {
+      const res = await fetch('/api/bootstrap', { cache: 'no-store' })
+      if (!res.ok) return
+      const data = await res.json()
+      setCurrentUser(data.currentUser ?? null)
+      setCategories(data.categories ?? [])
+      setEventTypes(data.eventTypes ?? [])
+      setListings(data.listings ?? [])
+      setUsers(data.users ?? [])
+      setEvents(data.events ?? [])
+      setInvoices(data.invoices ?? [])
+      setApplications(data.applications ?? [])
+    } catch {
+      // ignore network error during initial hydration
+    } finally {
+      setLoadingData(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void refreshData()
+    try {
+      const rawFav = localStorage.getItem(FAVORITES_KEY)
+      if (rawFav) setFavorites(JSON.parse(rawFav))
+    } catch {
+      // ignore
+    }
+  }, [refreshData])
+
+  const openAuthModal = (intent: 'general' | 'quote-checkout' | 'provider' = 'general') => {
+    setAuthModalIntent(intent)
+    setAuthModalOpen(true)
   }
+  const closeAuthModal = () => setAuthModalOpen(false)
 
   const setRoute = (next: AppRoute) => {
     if (next === 'admin-portal' && currentUser?.role !== 'admin') {
@@ -227,12 +216,6 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const openAuthModal = (intent: 'general' | 'quote-checkout' | 'provider' = 'general') => {
-    setAuthModalIntent(intent)
-    setAuthModalOpen(true)
-  }
-  const closeAuthModal = () => setAuthModalOpen(false)
-
   const navigateAfterAuth = (
     user: UserAccount,
     intent: 'general' | 'quote-checkout' | 'provider',
@@ -255,105 +238,125 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const loginWithCredentials = (email: string, password: string) => {
-    const normalized = email.trim().toLowerCase()
-    const found = users.find((u) => u.email.toLowerCase() === normalized)
-    if (!found) {
-      return { ok: false, error: 'Correo o contraseña incorrectos.' }
-    }
-    if (found.status === 'suspended') {
-      return { ok: false, error: 'Esta cuenta se encuentra suspendida.' }
-    }
-    if (found.password !== password) {
-      return { ok: false, error: 'Correo o contraseña incorrectos.' }
-    }
-    setCurrentUserId(found.id)
+  const loginWithCredentials = async (email: string, password: string) => {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    })
+    const data = await res.json()
+    if (!res.ok) return { ok: false, error: data.error || 'Error al iniciar sesión.' }
+    await refreshData()
     setAuthModalOpen(false)
-    showToast(`Bienvenido, ${found.name}`)
-    navigateAfterAuth(found, authModalIntent)
+    showToast(`Bienvenido, ${data.user.name}`)
+    navigateAfterAuth(data.user, authModalIntent)
     return { ok: true }
   }
 
-  const registerAccount = (data: {
+  const registerAccount = async (payload: {
     name: string
     email: string
     password: string
     role: Exclude<UserRole, 'admin'>
     city?: string
   }) => {
-    const normalized = data.email.trim().toLowerCase()
-    if (users.some((u) => u.email.toLowerCase() === normalized)) {
-      return { ok: false, error: 'Ya existe una cuenta registrada con este correo.' }
-    }
-    if (data.password.length < 6) {
-      return { ok: false, error: 'La contraseña debe tener al menos 6 caracteres.' }
-    }
-    const newUser: UserAccount = {
-      id: `usr-${Date.now()}`,
-      name: data.name.trim(),
-      email: normalized,
-      password: data.password,
-      role: data.role,
-      city: data.city?.trim() || '',
-      status: 'active',
-      createdAt: new Date().toISOString().slice(0, 10),
-      providerStatus: data.role === 'provider' ? 'none' : undefined,
-    }
-    setUsers((prev) => [newUser, ...prev])
-    setCurrentUserId(newUser.id)
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    const data = await res.json()
+    if (!res.ok) return { ok: false, error: data.error || 'No se pudo crear la cuenta.' }
+    await refreshData()
     setAuthModalOpen(false)
-    showToast(`Cuenta creada para ${newUser.name}`)
-    navigateAfterAuth(newUser, authModalIntent)
+    showToast(`Cuenta creada para ${data.user.name}`)
+    navigateAfterAuth(data.user, authModalIntent)
     return { ok: true }
   }
 
-  const logout = () => {
-    setCurrentUserId(null)
+  const logout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    setCurrentUser(null)
     setRouteRaw('landing')
+    await refreshData()
     showToast('Has cerrado sesión.')
   }
 
-  const updateProfile = (data: Partial<UserAccount>) => {
+  const updateProfile = async (patch: Partial<UserAccount>) => {
     if (!currentUser) return
-    setUsers((prev) => prev.map((u) => (u.id === currentUser.id ? { ...u, ...data } : u)))
-    showToast('Perfil actualizado correctamente.')
+    const res = await fetch(`/api/users/${currentUser.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Perfil actualizado correctamente.')
+    }
   }
 
   const toggleFavorite = (listingId: string) => {
-    setFavorites((prev) =>
-      prev.includes(listingId) ? prev.filter((id) => id !== listingId) : [...prev, listingId],
-    )
+    setFavorites((prev) => {
+      const next = prev.includes(listingId)
+        ? prev.filter((id) => id !== listingId)
+        : [...prev, listingId]
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(next))
+      } catch {
+        // ignore
+      }
+      return next
+    })
   }
 
-  const toggleUserStatus = (userId: string) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === userId && u.role !== 'admin'
-          ? { ...u, status: u.status === 'active' ? 'suspended' : 'active' }
-          : u,
-      ),
-    )
+  const toggleUserStatus = async (userId: string) => {
+    const res = await fetch(`/api/users/${userId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'toggleStatus' }),
+    })
+    if (res.ok) await refreshData()
   }
 
-  const addCategory = (cat: Omit<CategoryItem, 'id'>) => {
-    setCategories((prev) => [...prev, { ...cat, id: `cat-${Date.now()}` }])
-    showToast(`Categoría "${cat.name}" agregada.`)
+  const addCategory = async (cat: Omit<CategoryItem, 'id'>) => {
+    const res = await fetch('/api/categories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cat),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast(`Categoría "${cat.name}" agregada.`)
+    }
   }
 
-  const deleteCategory = (id: string) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id))
-    showToast('Categoría eliminada.')
+  const deleteCategory = async (id: string) => {
+    const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' })
+    if (res.ok) {
+      await refreshData()
+      showToast('Categoría eliminada.')
+    }
   }
 
-  const addEventType = (name: string) => {
-    const trimmed = name.trim()
-    if (!trimmed || eventTypes.includes(trimmed)) return
-    setEventTypes((prev) => [...prev, trimmed])
-    showToast(`Tipo de evento "${trimmed}" agregado.`)
+  const addEventType = async (name: string) => {
+    const res = await fetch('/api/event-types', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast(`Tipo de evento "${name}" agregado.`)
+    }
   }
 
-  const deleteEventType = (name: string) => {
-    setEventTypes((prev) => prev.filter((e) => e !== name))
+  const deleteEventType = async (name: string) => {
+    const res = await fetch('/api/event-types', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
+    })
+    if (res.ok) await refreshData()
   }
 
   const isListingAvailableOnDate = (listingId: string, dateTime?: string) => {
@@ -373,436 +376,206 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
     return !hasAcceptedBooking
   }
 
-  const createListingRecord = (item: Omit<ListingItem, 'id' | 'rating' | 'reviews'>) => {
-    const created: ListingItem = {
-      ...item,
-      id: `${item.kind === 'espacio' ? 'sp' : 'sv'}-${Date.now()}`,
-      rating: 5.0,
-      reviews: 0,
-    }
-    setListings((prev) => [created, ...prev])
-    return created
-  }
-
-  const addListing = (item: Omit<ListingItem, 'id' | 'rating' | 'reviews'>) => {
-    if (!currentUser || currentUser.role !== 'provider' || currentUser.providerStatus !== 'approved') {
-      showToast('Solo los proveedores dados de alta y autorizados pueden publicar espacios o servicios.')
+  const addListing = async (item: Omit<ListingItem, 'id' | 'rating' | 'reviews'>) => {
+    const res = await fetch('/api/listings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(item),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      showToast(data.error || 'No se pudo publicar.')
       return
     }
-    createListingRecord({
-      ...item,
-      approvalStatus: 'pending',
-      active: false,
-    })
+    await refreshData()
     showToast(`"${item.title}" enviado a revisión del administrador para su publicación.`)
   }
 
-  const approveListing = (id: string) => {
-    const target = listings.find((l) => l.id === id)
-    setListings((prev) =>
-      prev.map((l) =>
-        l.id === id
-          ? { ...l, approvalStatus: 'approved', approvalRejectionReason: undefined, active: true }
-          : l,
-      ),
-    )
-    if (target) showToast(`"${target.title}" aprobado y publicado en el catálogo.`)
+  const updateListing = async (id: string, patch: Partial<ListingItem>) => {
+    const res = await fetch(`/api/listings/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Publicación actualizada.')
+    }
   }
 
-  const rejectListing = (id: string, reason: string) => {
-    const target = listings.find((l) => l.id === id)
-    setListings((prev) =>
-      prev.map((l) =>
-        l.id === id
-          ? {
-              ...l,
-              approvalStatus: 'rejected',
-              approvalRejectionReason: reason,
-              active: false,
-            }
-          : l,
-      ),
-    )
-    if (target) showToast(`"${target.title}" declinado. Se notificó al proveedor.`)
+  const deleteListing = async (id: string) => {
+    const res = await fetch(`/api/listings/${id}`, { method: 'DELETE' })
+    if (res.ok) {
+      await refreshData()
+      showToast('Publicación eliminada.')
+    }
   }
 
-  const updateListing = (id: string, patch: Partial<ListingItem>) => {
-    setListings((prev) => prev.map((l) => (l.id === id ? { ...l, ...patch } : l)))
-    showToast('Publicación actualizada.')
+  const approveListing = async (id: string) => {
+    const res = await fetch(`/api/listings/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'approve' }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Espacio / servicio aprobado y publicado en el catálogo.')
+    }
   }
 
-  const deleteListing = (id: string) => {
-    setListings((prev) => prev.filter((l) => l.id !== id))
-    showToast('Publicación eliminada.')
+  const rejectListing = async (id: string, reason: string) => {
+    const res = await fetch(`/api/listings/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reject', reason }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Publicación declinada. Se notificó al proveedor.')
+    }
   }
 
-  const submitEventQuote = (draft: PendingQuoteDraft) => {
+  const submitEventQuote = async (draft: PendingQuoteDraft) => {
     if (!currentUser) {
       setPendingQuoteDraft(draft)
       openAuthModal('quote-checkout')
       return { ok: false, needsAuth: true }
     }
-    const space = listings.find((l) => l.id === draft.spaceId)
-    const selectedServices = listings.filter((l) => draft.serviceIds.includes(l.id))
-
-    if (space && !isListingAvailableOnDate(space.id, draft.dateTime)) {
-      showToast(`"${space.title}" ya no tiene disponible esa fecha. Elige otra fecha o espacio.`)
+    const res = await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(draft),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      showToast(data.error || 'No se pudo crear el evento.')
       return { ok: false }
     }
-    const unavailableService = selectedServices.find(
-      (sv) => !isListingAvailableOnDate(sv.id, draft.dateTime),
-    )
-    if (unavailableService) {
-      showToast(
-        `"${unavailableService.title}" ya tiene ocupada esa fecha. Selecciona otro proveedor o fecha.`,
-      )
-      return { ok: false }
-    }
-    const bookingItems: EventBookingItem[] = []
-
-    if (space) {
-      bookingItems.push({
-        id: `bi-sp-${Date.now()}`,
-        kind: 'espacio',
-        category: space.category,
-        listingId: space.id,
-        listingTitle: space.title,
-        providerId: space.providerId,
-        providerName: space.providerName,
-        price: space.price,
-        status: 'pendiente',
-        rejectedListingIds: [],
-      })
-    }
-
-    selectedServices.forEach((sv, idx) => {
-      bookingItems.push({
-        id: `bi-sv-${Date.now()}-${idx}`,
-        kind: 'servicio',
-        category: sv.category,
-        listingId: sv.id,
-        listingTitle: sv.title,
-        providerId: sv.providerId,
-        providerName: sv.providerName,
-        price: sv.price,
-        status: 'pendiente',
-        rejectedListingIds: [],
-      })
-    })
-
-    // Include selected categories that don't have a specific provider chosen yet
-    const coveredCategories = new Set(selectedServices.map((s) => s.category))
-    ;(draft.selectedCategories ?? []).forEach((catName, idx) => {
-      if (!coveredCategories.has(catName)) {
-        bookingItems.push({
-          id: `bi-cat-${Date.now()}-${idx}`,
-          kind: 'servicio',
-          category: catName,
-          price: 0,
-          status: 'sin_proveedor',
-          rejectedListingIds: [],
-        })
-      }
-    })
-
-    const totalAmount = bookingItems.reduce((acc, item) => acc + item.price, 0)
-    const commissionAmount = Math.round(totalAmount * 0.1)
-
-    const quote: EventQuote = {
-      id: `evt-${Date.now()}`,
-      clientId: currentUser.id,
-      clientName: currentUser.name,
-      clientEmail: currentUser.email,
-      occasion: draft.occasion || 'Celebración en Vinka',
-      dateTime: draft.dateTime || new Date().toISOString().slice(0, 16),
-      guests: draft.guests || 80,
-      spaceId: space?.id,
-      spaceTitle: space?.title,
-      serviceIds: selectedServices.map((s) => s.id),
-      serviceTitles: selectedServices.map((s) => s.title),
-      bookingItems,
-      totalAmount,
-      commissionAmount,
-      status: 'cotizado',
-      notes: draft.notes,
-      createdAt: new Date().toISOString().slice(0, 10),
-    }
-    setEvents((prev) => [quote, ...prev])
     setPendingQuoteDraft(null)
+    await refreshData()
     showToast('¡Evento creado! Enviamos tu solicitud a cada proveedor seleccionado.')
-    return { ok: true, quote }
+    return { ok: true, quote: data.event as EventQuote }
   }
 
-  const releaseDatesForEvent = (targetEvent: EventQuote, remainingEvents: EventQuote[]) => {
-    const dateKey = targetEvent.dateTime.slice(0, 10)
-    if (!dateKey) return
-    const affectedListingIds = new Set(
-      (targetEvent.bookingItems ?? [])
-        .map((i) => i.listingId)
-        .filter((id): id is string => Boolean(id)),
-    )
-    if (affectedListingIds.size === 0) return
-
-    setListings((prev) =>
-      prev.map((l) => {
-        if (!affectedListingIds.has(l.id) || !l.bookedDates?.includes(dateKey)) return l
-        const stillBookedElsewhere = remainingEvents.some(
-          (ev) =>
-            ev.id !== targetEvent.id &&
-            ev.status !== 'cancelado' &&
-            ev.dateTime.slice(0, 10) === dateKey &&
-            (ev.bookingItems ?? []).some(
-              (item) => item.listingId === l.id && item.status === 'aceptado',
-            ),
-        )
-        if (stillBookedElsewhere) return l
-        return {
-          ...l,
-          bookedDates: l.bookedDates.filter((d) => d !== dateKey),
-        }
-      }),
-    )
-  }
-
-  const updateEventStatus = (eventId: string, status: EventQuote['status']) => {
-    const target = events.find((e) => e.id === eventId)
-    if (status === 'cancelado' && target) {
-      releaseDatesForEvent(target, events)
+  const updateEventStatus = async (eventId: string, status: EventQuote['status']) => {
+    const res = await fetch(`/api/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast(`Estado del evento actualizado a "${status}".`)
     }
-    setEvents((prev) => prev.map((e) => (e.id === eventId ? { ...e, status } : e)))
-    showToast(`Estado del evento actualizado a "${status}".`)
   }
 
-  const cancelEvent = (eventId: string) => {
-    const target = events.find((e) => e.id === eventId)
-    if (!target) return
-    releaseDatesForEvent(target, events)
-    setEvents((prev) => prev.map((e) => (e.id === eventId ? { ...e, status: 'cancelado' } : e)))
-    showToast('Evento cancelado. Las fechas reservadas han sido liberadas.')
+  const cancelEvent = async (eventId: string) => {
+    const res = await fetch(`/api/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'cancel' }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Evento cancelado. Las fechas reservadas han sido liberadas.')
+    }
   }
 
-  const deleteEvent = (eventId: string) => {
-    const target = events.find((e) => e.id === eventId)
-    if (!target) return
-    const remaining = events.filter((e) => e.id !== eventId)
-    releaseDatesForEvent(target, remaining)
-    setEvents(remaining)
-    showToast('Evento eliminado de tu calendario.')
+  const deleteEvent = async (eventId: string) => {
+    const res = await fetch(`/api/events/${eventId}`, { method: 'DELETE' })
+    if (res.ok) {
+      await refreshData()
+      showToast('Evento eliminado de tu calendario.')
+    }
   }
 
-  const respondToBookingItem = (
+  const respondToBookingItem = async (
     eventId: string,
     itemId: string,
     decision: 'aceptado' | 'rechazado',
     note?: string,
   ) => {
-    const targetEvent = events.find((e) => e.id === eventId)
-    const targetItem = targetEvent?.bookingItems?.find((i) => i.id === itemId)
-    const dateKey = targetEvent?.dateTime.slice(0, 10)
-
-    if (decision === 'aceptado' && targetItem?.listingId && dateKey) {
-      setListings((prev) =>
-        prev.map((l) => {
-          if (l.id !== targetItem.listingId) return l
-          const currentDates = l.bookedDates ?? []
-          if (currentDates.includes(dateKey)) return l
-          return { ...l, bookedDates: [...currentDates, dateKey] }
-        }),
+    const res = await fetch(`/api/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'respondItem', itemId, decision, note }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast(
+        decision === 'aceptado'
+          ? 'Has aceptado tu participación y la fecha quedó bloqueada.'
+          : 'Evento rechazado. Se notificará al cliente con nuevas recomendaciones.',
       )
     }
-
-    setEvents((prev) =>
-      prev.map((ev) => {
-        if (ev.id !== eventId) return ev
-        const updatedItems = (ev.bookingItems ?? []).map((item) => {
-          if (item.id !== itemId) return item
-          const rejectedIds =
-            decision === 'rechazado' && item.listingId
-              ? Array.from(new Set([...(item.rejectedListingIds ?? []), item.listingId]))
-              : (item.rejectedListingIds ?? [])
-          return {
-            ...item,
-            status: decision,
-            rejectionNote: decision === 'rechazado' ? note : undefined,
-            rejectedListingIds: rejectedIds,
-          }
-        })
-        const allAccepted =
-          updatedItems.length > 0 && updatedItems.every((i) => i.status === 'aceptado')
-        return {
-          ...ev,
-          bookingItems: updatedItems,
-          status: allAccepted ? 'confirmado' : ev.status === 'completado' ? 'completado' : 'cotizado',
-        }
-      }),
-    )
-    showToast(
-      decision === 'aceptado'
-        ? 'Has aceptado tu participación en el evento.'
-        : 'Evento rechazado. Se notificará al cliente con nuevas recomendaciones.',
-    )
   }
 
-  const replaceBookingItem = (eventId: string, itemId: string, newListingId: string) => {
-    const replacement = listings.find((l) => l.id === newListingId)
-    if (!replacement) return
-    setEvents((prev) =>
-      prev.map((ev) => {
-        if (ev.id !== eventId) return ev
-        const updatedItems = (ev.bookingItems ?? []).map((item) => {
-          if (item.id !== itemId) return item
-          return {
-            ...item,
-            listingId: replacement.id,
-            listingTitle: replacement.title,
-            providerId: replacement.providerId,
-            providerName: replacement.providerName,
-            price: replacement.price,
-            status: 'pendiente' as const,
-            rejectionNote: undefined,
-          }
-        })
-        const spaceItem = updatedItems.find((i) => i.kind === 'espacio')
-        const serviceItems = updatedItems.filter((i) => i.kind === 'servicio' && i.listingId)
-        const totalAmount = updatedItems.reduce((sum, i) => sum + i.price, 0)
-        return {
-          ...ev,
-          bookingItems: updatedItems,
-          spaceId: spaceItem?.listingId,
-          spaceTitle: spaceItem?.listingTitle,
-          serviceIds: serviceItems.map((i) => i.listingId!).filter(Boolean),
-          serviceTitles: serviceItems.map((i) => i.listingTitle!).filter(Boolean),
-          totalAmount,
-          commissionAmount: Math.round(totalAmount * 0.1),
-        }
-      }),
-    )
-    showToast(`Solicitud enviada a ${replacement.title}. Esperando confirmación.`)
+  const replaceBookingItem = async (eventId: string, itemId: string, newListingId: string) => {
+    const res = await fetch(`/api/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'replaceItem', itemId, newListingId }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Solicitud enviada al nuevo proveedor recomendado.')
+    }
   }
 
-  const requestInvoice = (params: {
+  const requestInvoice = async (params: {
     eventId: string
     rfc: string
     razonSocial: string
     usoCfdi: string
   }) => {
-    const evt = events.find((e) => e.id === params.eventId)
-    if (!evt) return null
-    const folio = `VNK-${new Date().getFullYear()}-${String(invoices.length + 1).padStart(4, '0')}`
-    const subtotal = Number((evt.totalAmount / 1.16).toFixed(2))
-    const iva = Number((evt.totalAmount - subtotal).toFixed(2))
-    const inv: InvoiceRecord = {
-      id: `inv-${Date.now()}`,
-      folio,
-      eventId: evt.id,
-      eventOccasion: evt.occasion,
-      clientId: evt.clientId,
-      clientName: evt.clientName,
-      rfc: params.rfc.toUpperCase(),
-      razonSocial: params.razonSocial.toUpperCase(),
-      usoCfdi: params.usoCfdi,
-      providerName: evt.spaceTitle || evt.serviceTitles[0] || 'Vinka Servicios',
-      subtotal,
-      iva,
-      total: evt.totalAmount,
-      status: 'emitida',
-      issuedAt: new Date().toISOString().slice(0, 10),
-    }
-    setInvoices((prev) => [inv, ...prev])
-    setEvents((prev) =>
-      prev.map((e) => (e.id === evt.id ? { ...e, invoiceRequested: true, invoiceFolio: folio } : e)),
-    )
-    showToast(`Factura ${folio} generada correctamente.`)
-    return inv
+    const res = await fetch('/api/invoices', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(params),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    await refreshData()
+    showToast(`Factura ${data.invoice.folio} generada correctamente.`)
+    return data.invoice as InvoiceRecord
   }
 
-  const submitProviderApplication = (
+  const submitProviderApplication = async (
     app: Omit<ProviderApplication, 'id' | 'status' | 'submittedAt'>,
   ) => {
-    const newApp: ProviderApplication = {
-      ...app,
-      id: `app-${Date.now()}`,
-      status: 'pending',
-      submittedAt: new Date().toISOString().slice(0, 10),
-    }
-    setApplications((prev) => [newApp, ...prev.filter((a) => a.userId !== app.userId)])
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === app.userId ? { ...u, providerStatus: 'pending', rejectionReason: undefined } : u,
-      ),
-    )
-    showToast('Solicitud enviada a revisión por el equipo Vinka.')
-  }
-
-  const approveApplication = (appId: string) => {
-    const app = applications.find((a) => a.id === appId)
-    if (!app) return
-    setApplications((prev) =>
-      prev.map((a) =>
-        a.id === appId ? { ...a, status: 'approved', rejectionReason: undefined } : a,
-      ),
-    )
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === app.userId
-          ? { ...u, role: 'provider', providerStatus: 'approved', rejectionReason: undefined }
-          : u,
-      ),
-    )
-    createListingRecord({
-      providerId: app.userId,
-      providerName: app.businessName,
-      kind: app.offeringType,
-      title: app.businessName,
-      category:
-        app.categories[0] || (app.offeringType === 'espacio' ? 'Fincas y Terrazas' : 'Decoración'),
-      location: app.location,
-      capacity: app.capacity,
-      price: app.cost || 0,
-      priceUnit: app.costUnit || 'por evento',
-      tag: 'Verificado',
-      description: app.descriptionAndIncluded,
-      includedServices: [app.specificDetails || 'Atención personalizada'],
-      rules: app.rules,
-      schedule: app.scheduleAndAvailability,
-      offersInvoicing: app.invoicingService,
-      image: app.photos[0] || '',
-      gallery: app.photos,
-      host: {
-        name: app.fullName,
-        roleLabel: `Anfitrión Verificado · ${app.businessName}`,
-        verified: true,
-        memberSince: new Date().getFullYear().toString(),
-        responseRate: '100%',
-        responseTime: 'Menos de 1 hora',
-        eventsHosted: 0,
-        bio: app.descriptionAndIncluded || 'Anfitrión verificado por el equipo de Vinka.',
-        city: app.location,
-        avatarInitials: app.fullName
-          .split(' ')
-          .slice(0, 2)
-          .map((n) => n[0])
-          .join('')
-          .toUpperCase(),
-      },
-      active: true,
-      approvalStatus: 'approved',
+    const res = await fetch('/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(app),
     })
-    showToast(`Proveedor "${app.businessName}" autorizado y publicado.`)
+    if (res.ok) {
+      await refreshData()
+      showToast('Solicitud enviada a revisión por el equipo Vinka.')
+    }
   }
 
-  const rejectApplication = (appId: string, reason: string) => {
-    const app = applications.find((a) => a.id === appId)
-    if (!app) return
-    setApplications((prev) =>
-      prev.map((a) => (a.id === appId ? { ...a, status: 'rejected', rejectionReason: reason } : a)),
-    )
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === app.userId ? { ...u, providerStatus: 'rejected', rejectionReason: reason } : u,
-      ),
-    )
-    showToast(`Solicitud rechazada. Notificación enviada a ${app.email}.`)
+  const approveApplication = async (appId: string) => {
+    const res = await fetch(`/api/applications/${appId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'approve' }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Proveedor autorizado y publicado.')
+    }
+  }
+
+  const rejectApplication = async (appId: string, reason: string) => {
+    const res = await fetch(`/api/applications/${appId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reject', reason }),
+    })
+    if (res.ok) {
+      await refreshData()
+      showToast('Solicitud rechazada. Notificación enviada al proveedor.')
+    }
   }
 
   return (
@@ -819,6 +592,8 @@ export function VinkaProvider({ children }: { children: React.ReactNode }) {
         setProviderTab,
         adminTab,
         setAdminTab,
+        loadingData,
+        refreshData,
         currentUser,
         authModalOpen,
         authModalIntent,

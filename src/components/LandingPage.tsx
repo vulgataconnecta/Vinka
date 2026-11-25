@@ -17,12 +17,13 @@ import {
   UtensilsCrossed,
   Wand2,
 } from 'lucide-react'
-import heroImage from '../assets/hero-evento.png'
 import { useVinka } from '../context/VinkaContext'
 import type { ListingItem } from '../types/vinka'
 import { ListingDetailModal } from './ListingDetailModal'
 import { Reveal } from './Reveal'
 import { VinkaLogo } from './VinkaLogo'
+
+const heroImage = '/images/hero-evento.png'
 
 function CategoryIcon({ name, size = 24 }: { name: string; size?: number }) {
   switch (name) {

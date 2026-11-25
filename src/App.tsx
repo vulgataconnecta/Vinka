@@ -1,3 +1,5 @@
+'use client'
+
 import { CheckCircle2 } from 'lucide-react'
 import { AdminPortal } from './components/AdminPortal'
 import { AuthModal } from './components/AuthModal'

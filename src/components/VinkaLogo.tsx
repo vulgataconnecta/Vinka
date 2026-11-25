@@ -1,4 +1,4 @@
-import logoCoffee from '../assets/logo-coffee.png'
+'use client'
 
 interface Props {
   size?: 'sm' | 'md' | 'lg'
@@ -11,7 +11,7 @@ export function VinkaLogo({ size = 'md', lightText = false }: Props) {
   return (
     <span className="inline-flex items-center select-none">
       <img
-        src={logoCoffee}
+        src="/images/logo-coffee.png"
         alt="Vinka"
         className={`${heightClass} w-auto object-contain transition-opacity ${lightText ? 'brightness-0 invert opacity-95' : ''
           }`}
